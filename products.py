@@ -44,10 +44,12 @@ class Product:
         """
         if quantity < 0:
             raise ValueError("Quantity cannot be negative.")
-
-        self.quantity = quantity
-        if self.quantity == 0:
+        elif quantity == 0:
+            self.quantity == 0
             self.deactivate()
+        else:
+            self.quantity = quantity
+            self.activate()
 
     def is_active(self) -> bool:
         """
