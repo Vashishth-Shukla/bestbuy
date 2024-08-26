@@ -1,3 +1,6 @@
+from promotion import Promotion
+
+
 class Product:
     """
     The Product class represents a product in a store, including its name, price, and quantity.
@@ -26,6 +29,7 @@ class Product:
         self.price = price
         self.quantity = quantity
         self.active = True
+        self.promotion: Promotion = None  # Initialize with no promotion
 
     def get_quantity(self) -> float:
         """
@@ -74,28 +78,42 @@ class Product:
         """
         self.active = False
 
+    def get_promotion(self) -> Promotion:
+        """
+        Returns the current promotion applied to the product.
+        """
+        return self.promotion
+
+    def set_promotion(self, promotion: Promotion):
+        """
+        Sets the promotion for the product.
+
+        Args:
+            promotion (Promotion): The promotion to apply to the product.
+        """
+        self.promotion = promotion
+
     def show(self) -> str:
         """
-        Returns a string representation of the product.
+        Returns a string representation of the product, including promotion details if any.
 
         Returns:
             str: A string that represents the product.
         """
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
+        promotion_info = ""
+        if self.promotion:
+            promotion_info = f" (Promotion: {self.promotion.__class__.__name__})"
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}{promotion_info}"
 
     def buy(self, quantity: int) -> float:
         """
-        Buys a given quantity of the product and updates the quantity.
+        Buys a given quantity of the product and updates the quantity. Applies promotion if available.
 
         Args:
             quantity (int): The quantity to buy.
 
         Returns:
-            float: The total price of the purchase.
-
-        Raises:
-            ValueError: If the quantity to buy is less than or equal to 0 or if the requested quantity is more than available.
-            ValueError: If the product is inactive.
+            float: The total price of the purchase after applying the promotion.
         """
         if quantity <= 0:
             raise ValueError("Quantity to buy must be greater than zero.")
@@ -108,7 +126,11 @@ class Product:
         if self.quantity == 0:
             self.deactivate()
 
-        return self.price * quantity
+        total_price = self.price * quantity
+        if self.promotion:
+            total_price = self.promotion.apply_promotion(self.price, quantity)
+
+        return total_price
 
 
 class NonStockedProduct(Product):

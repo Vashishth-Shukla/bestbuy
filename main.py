@@ -1,4 +1,9 @@
 from products import Product
+from promotion import (
+    Buy2Get1FreePromotion,
+    PercentageDiscountPromotion,
+    SecondItemHalfPricePromotion,
+)
 from store import Store
 
 
@@ -122,15 +127,33 @@ def start(store: Store):
             break
 
 
-if __name__ == "__main__":
-    # Setup initial stock of inventory
+def setup_store():
+    """
+    Sets up the initial inventory with promotions.
+    """
     product_list = [
         Product("MacBook Air M2", price=1450, quantity=100),
         Product("Bose QuietComfort Earbuds", price=250, quantity=500),
         Product("Google Pixel 7", price=500, quantity=250),
     ]
 
-    best_buy = Store(product_list)
+    # Setting promotions
+    product_list[0].set_promotion(
+        PercentageDiscountPromotion(10)
+    )  # 10% off on MacBook Air M2
+    product_list[1].set_promotion(
+        SecondItemHalfPricePromotion()
+    )  # Second item at half price for Bose Earbuds
+    product_list[2].set_promotion(
+        Buy2Get1FreePromotion()
+    )  # Buy 2, get 1 free for Google Pixel 7
+
+    return Store(product_list)
+
+
+if __name__ == "__main__":
+    # Setup initial stock of inventory with promotions
+    best_buy = setup_store()
 
     # Start the user interface
     start(best_buy)
