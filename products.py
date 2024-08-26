@@ -79,7 +79,7 @@ class Product:
         Returns:
             str: A string that represents the product.
         """
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, Active Status: {self.active}"
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
 
     def buy(self, quantity: int) -> float:
         """
