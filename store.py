@@ -5,8 +5,10 @@ from products import Product
 
 class Store:
     """
-    The Store class manages a collection of products, allowing the user to
-    add, remove, and order products.
+    Manages a collection of products in a store, allowing adding, removing, ordering products, and combining stores.
+
+    Attributes:
+        products (List[Product]): A list of products in the store.
     """
 
     def __init__(self, products: List["Product"]):
@@ -59,19 +61,40 @@ class Store:
         Processes an order based on a shopping list of products and quantities.
 
         Args:
-            shopping_list (List[Tuple[Product, int]]): A list of tuples where each tuple
-                                                       contains a product and the quantity to order.
+            shopping_list (List[Tuple[Product, int]]): A list of tuples where each tuple contains a product and the quantity to order.
 
         Returns:
             float: The total price of the order.
 
         Raises:
-            Exception: If any product in the shopping list is not available or the requested
-                       quantity is more than available.
+            Exception: If any product in the shopping list is not available or the requested quantity is more than available.
         """
         total_price = 0.0
-
         for product, quantity in shopping_list:
             total_price += product.buy(quantity)
-
         return total_price
+
+    def __contains__(self, product: "Product") -> bool:
+        """
+        Checks if a product exists in the store.
+
+        Args:
+            product (Product): The product to check.
+
+        Returns:
+            bool: True if the product exists in the store, otherwise False.
+        """
+        return product in self.products
+
+    def __add__(self, other: "Store") -> "Store":
+        """
+        Combines the products from this store with another store.
+
+        Args:
+            other (Store): The other store to combine with.
+
+        Returns:
+            Store: A new store instance containing products from both stores.
+        """
+        combined_products = self.products + other.products
+        return Store(combined_products)

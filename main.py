@@ -51,7 +51,7 @@ def list_products(store: Store):
     if products:
         print("\nAvailable Products:")
         for product in products:
-            print(product.show())
+            print(str(product))
     else:
         print("\nNo active products available in the store.")
 
@@ -83,7 +83,7 @@ def process_order(store: Store):
 
     print("\nAvailable Products:")
     for index, product in enumerate(products):
-        print(f"{index + 1}. {product.show()}")
+        print(f"{index + 1}. {str(product)}")
 
     while True:
         try:

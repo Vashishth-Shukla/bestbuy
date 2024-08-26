@@ -81,6 +81,9 @@ class Product:
     def get_promotion(self) -> Promotion:
         """
         Returns the current promotion applied to the product.
+
+        Returns:
+            Promotion: The promotion applied to the product.
         """
         return self.promotion
 
@@ -93,7 +96,7 @@ class Product:
         """
         self.promotion = promotion
 
-    def show(self) -> str:
+    def __str__(self) -> str:
         """
         Returns a string representation of the product, including promotion details if any.
 
@@ -103,7 +106,43 @@ class Product:
         promotion_info = ""
         if self.promotion:
             promotion_info = f" (Promotion: {self.promotion.__class__.__name__})"
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}{promotion_info}"
+        return f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}{promotion_info}"
+
+    def __gt__(self, other: "Product") -> bool:
+        """
+        Compares the price of this product with another product.
+
+        Args:
+            other (Product): The other product to compare.
+
+        Returns:
+            bool: True if this product is more expensive than the other product, otherwise False.
+        """
+        return self.price > other.price
+
+    def __lt__(self, other: "Product") -> bool:
+        """
+        Compares the price of this product with another product.
+
+        Args:
+            other (Product): The other product to compare.
+
+        Returns:
+            bool: True if this product is less expensive than the other product, otherwise False.
+        """
+        return self.price < other.price
+
+    def __eq__(self, other: "Product") -> bool:
+        """
+        Checks if this product is equal to another product based on name and price.
+
+        Args:
+            other (Product): The other product to compare.
+
+        Returns:
+            bool: True if the products have the same name and price, otherwise False.
+        """
+        return self.name == other.name and self.price == other.price
 
     def buy(self, quantity: int) -> float:
         """
@@ -114,6 +153,10 @@ class Product:
 
         Returns:
             float: The total price of the purchase after applying the promotion.
+
+        Raises:
+            ValueError: If the quantity to buy is less than or equal to 0, if the product is inactive,
+                        or if the requested quantity is more than available.
         """
         if quantity <= 0:
             raise ValueError("Quantity to buy must be greater than zero.")
@@ -178,14 +221,14 @@ class NonStockedProduct(Product):
             raise ValueError("Quantity to buy must be greater than zero.")
         return self.price * quantity
 
-    def show(self) -> str:
+    def __str__(self) -> str:
         """
         Returns a string representation of the non-stocked product.
 
         Returns:
             str: A string representing the non-stocked product.
         """
-        return f"{self.name}, Price: {self.price} (Non-stocked)"
+        return f"{self.name}, Price: ${self.price} (Non-stocked)"
 
 
 class LimitedProduct(Product):
@@ -226,11 +269,11 @@ class LimitedProduct(Product):
             raise ValueError(f"Cannot buy more than {self.maximum} of this product.")
         return super().buy(quantity)
 
-    def show(self) -> str:
+    def __str__(self) -> str:
         """
         Returns a string representation of the limited product.
 
         Returns:
             str: A string representing the limited product.
         """
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, Max per order: {self.maximum}"
+        return f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}, Max per order: {self.maximum}"
